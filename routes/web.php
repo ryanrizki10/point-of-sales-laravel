@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
@@ -18,10 +19,16 @@ Route::get('tambah', [BelajarController::class, 'tambah']);
 // Route::get('kali', [BelajarController::class, 'kali']);
 
 Route::post('action-tambah', [BelajarController::class, 'actionTambah']);
-Route::get('login', [LoginController::class,'login'])->name('login');
+Route::get('login', [LoginController::class, 'login'])->name('login');
 Route::post('action-login', [LoginController::class, 'actionLogin']);
 
-Route::resource('dashboard', DashboardController::class);
-Route::resource('categories', CategoriesController::class)->middleware('auth');
-Route::resource('users', UsersController::class)->middleware('auth');
-Route::get('logout',[LoginController::class,'logout']);
+Route::group(['middleware' => ['auth']], function () {
+    Route::resource('dashboard', DashboardController::class);
+    Route::resource('categories', CategoriesController::class);
+    Route::resource('users', UsersController::class);
+    Route::resource('product', ProductController::class);
+    Route::get('logout', [LoginController::class, 'logout']);
+});
+
+
+//->middleware('auth')
